@@ -6,13 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.amazonaws.auth.AWSCredentialsProviderChain;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
@@ -31,22 +32,40 @@ public class DynDb {
     DynamoDBMapper dynamoDbMapper;
     DynamoDBMapperConfig dynamoDbMapperConfig;
 
-    public DynDb(String tableName, String awsAccessKey, String awsSecretKey, String awsRegion) {
-        
-        this.amazonDynamoDbClient = AmazonDynamoDBClientBuilder
-            .standard()
-            .withCredentials(new AWSStaticCredentialsProvider(
-                new BasicAWSCredentials(awsAccessKey, awsSecretKey)))
-            .withRegion(awsRegion)
-            .build();
+    /**
+     * Connects using explicit credentials
+     */
+    public DynDb(String awsAccessKey, String awsSecretKey, String awsRegion) {
+
+        this.amazonDynamoDbClient = AmazonDynamoDBClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKey, awsSecretKey)))
+                .withRegion(awsRegion).build();
 
         this.dynamoDb = new DynamoDB(this.amazonDynamoDbClient);
 
         this.dynamoDbMapper = new DynamoDBMapper(this.amazonDynamoDbClient);
-        
+
         this.dynamoDbMapperConfig = DynamoDBMapperConfig.builder()
-            .withConsistentReads(DynamoDBMapperConfig.ConsistentReads.CONSISTENT)
-            .build();
+                .withConsistentReads(DynamoDBMapperConfig.ConsistentReads.CONSISTENT).build();
+
+    }
+
+    /**
+     * Connects using Default AWS Credentials (~/.aws/credentials) and region (~/.aws/config),
+     * using the DefaultAWSCredentialsProviderChain and DefaultAwsRegionProviderChain chain
+     * Table name is specified on the Entity @DynamoDBTable
+     */
+    public DynDb() {
+
+        this.amazonDynamoDbClient = AmazonDynamoDBClientBuilder.defaultClient();
+
+        this.dynamoDb = new DynamoDB(this.amazonDynamoDbClient);
+
+        this.dynamoDbMapper = new DynamoDBMapper(this.amazonDynamoDbClient);
+
+        this.dynamoDbMapperConfig = DynamoDBMapperConfig.builder()
+                .withConsistentReads(DynamoDBMapperConfig.ConsistentReads.CONSISTENT)
+                .build();
     }
 
     public String getTableStatus(String tableName) throws InterruptedException {
@@ -72,6 +91,8 @@ public class DynDb {
     public BaseItem putBaseItem(String pkey, String skey, String value) {
         BaseItem item = new BaseItem(pkey, skey, value);
         dynamoDbMapper.save(item);
+        // example overriding BaseItem@DynamoDBTableName
+        // dynamoMapper.save(myEntity, new DynamoDBMapperConfig(new TableNameOverride(this.tableName)));
         return item;
     }
 
@@ -93,9 +114,8 @@ public class DynDb {
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
         eav.put(":val1", new AttributeValue().withS(skey));
 
-        DynamoDBScanExpression ddbScanExpression = new DynamoDBScanExpression()
-            .withFilterExpression("skey = :val1")
-            .withExpressionAttributeValues(eav);
+        DynamoDBScanExpression ddbScanExpression = new DynamoDBScanExpression().withFilterExpression("skey = :val1")
+                .withExpressionAttributeValues(eav);
 
         List<BaseItem> items = dynamoDbMapper.scan(BaseItem.class, ddbScanExpression);
         return items;

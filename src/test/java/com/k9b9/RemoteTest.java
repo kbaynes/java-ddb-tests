@@ -13,11 +13,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * This class tests with a direct DDB connection to a single DynamoDB table.
+ * This class tests with a direct DDB connection to a single DynamoDB table. 
+ * By default it uses the credentials in ~/.aws/credentials
  */
 public class RemoteTest {
 
     DynDb myDb;
+    // by default, table name on BaseItem @DynamoDBTable is used
+    // can be overridden on save, see DynDb.putItem for example code
     String tableName = "SingleTableTest";
     String aws_accesskey = "YourKey";
     String aws_secretkey = "YourSecretKey";
@@ -25,12 +28,13 @@ public class RemoteTest {
 
     @Before
     public void beforeTest() {
-        this.myDb = new DynDb(tableName, aws_accesskey, aws_secretkey, aws_region);
+        // this.myDb = new DynDb(aws_accesskey, aws_secretkey, aws_region);
+        this.myDb = new DynDb();
     }
 
     @Test
     public void testTableStatus() throws InterruptedException {
-        String tableStatus = myDb.getTableStatus(tableName);
+        String tableStatus = myDb.getTableStatus(this.tableName);
         assertTrue("Table status = ACTIVE", tableStatus.equals("ACTIVE"));
         System.out.println("Table status: " + tableStatus);
     }
