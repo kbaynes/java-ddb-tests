@@ -1,0 +1,1 @@
+This project depends on a DynamoDB table called SingleTableTest, with a partition key named 'pkey' and a sort key named 'skey'.
