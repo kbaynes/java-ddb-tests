@@ -1,13 +1,12 @@
 package com.k9b9.entity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.k9b9.model.Admin;
+import com.k9b9.model.Admin.Level;
 
 /**
  * Admin entity
@@ -15,10 +14,10 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 @DynamoDBTable(tableName = "SingleTableTest")
 public class AdminItem {
 
-    public final String SKEY = "admin";
+    public static final String SKEY = "admin";
 
     public String pkey;
-    public String skey = SKEY;
+    public String skey = AdminItem.SKEY;
     public String name;
     public String userId;
     public String hashedPass;
@@ -30,35 +29,6 @@ public class AdminItem {
         this.userId = userId;
         this.hashedPass = hashedPass;
         this.level = level;
-    }
-
-    public enum Level {
-
-        ROOT(0),
-        ADMIN(100),
-        MANAGER(200),
-        VIEWER(300);
-
-        private int value;
-        private static Map<Integer,Level> map = new HashMap<Integer,Level>();
-
-        private Level(int value) {
-            this.value = value;
-        }
-
-        static {
-            for (Level level : Level.values()) {
-                map.put(level.value, level);
-            }
-        }
-
-        public static Level valueOf(int level) {
-            return (Level) map.get(level);
-        }
-
-        public int getValue() {
-            return value;
-        }
     }
 
     /**
@@ -126,7 +96,7 @@ public class AdminItem {
      * @param level the level to set
      */
     public void setLevel(int level) {
-        this.level = AdminItem.Level.valueOf(level);
+        this.level = Admin.Level.valueOf(level);
     }
 
     /**

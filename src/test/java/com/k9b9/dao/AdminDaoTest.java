@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.k9b9.ddb.DynDb;
 import com.k9b9.entity.AdminItem;
+import com.k9b9.model.Admin;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class AdminDaoTest {
     @Test
     public void testCreateRandomAdmin() {
         String uuid = java.util.UUID.randomUUID().toString();
-        AdminItem admin = new AdminItem(uuid, "adminName", "adminUid", "adminHashedPass", AdminItem.Level.ADMIN);
+        AdminItem admin = new AdminItem(uuid, "adminName", "adminUid", "adminHashedPass", Admin.Level.ADMIN);
         admin = this.dao.putAdmin(admin);
         assertNotNull(admin);
         assertTrue(admin.skey.equals("admin"));

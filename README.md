@@ -1,1 +1,5 @@
-This project depends on a DynamoDB table called SingleTableTest, with a partition key named 'pkey' and a sort key named 'skey'.
+# Java DynamoDB Tests
+
+## Goal
+
+This project is an experimental testbed of common usage patterns for DynamoDB in a web application.
