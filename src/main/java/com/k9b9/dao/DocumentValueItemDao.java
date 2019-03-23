@@ -6,45 +6,44 @@ import java.util.Map;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.k9b9.ddb.DynDb;
-import com.k9b9.entity.BaseItem;
+import com.k9b9.ddb.SingleTableDdb;
+import com.k9b9.entity.DocumentValueItem;
 
 /**
- * BaseItemDao
+ * DocumentValueItemDao
  */
-public class BaseItemDao {
+public class DocumentValueItemDao {
 
-    private DynDb dynDb;
+    private SingleTableDdb dynDb;
 
-    public BaseItemDao(DynDb dynDb) {
+    public DocumentValueItemDao(SingleTableDdb dynDb) {
         this.dynDb = dynDb;
     }
 
     /**
      * Create and Update are same operation
      */
-    public BaseItem putBaseItem(String pkey, String skey, String value) {
-        BaseItem item = new BaseItem(pkey, skey, value);
+    public DocumentValueItem putItem(DocumentValueItem item) {
         dynDb.dynamoDbMapper.save(item);
-        // example overriding BaseItem@DynamoDBTableName
+        // example overriding DocumentValueItem@DynamoDBTableName
         // dynamoMapper.save(myEntity, new dynDb.dynamoDbMapperConfig(new TableNameOverride(this.tableName)));
         return item;
     }
 
-    public BaseItem getBaseItem(String pkey, String skey) {
-        BaseItem item = dynDb.dynamoDbMapper.load(BaseItem.class, pkey, skey, this.dynDb.ddbCfgDefault);
+    public DocumentValueItem getItem(String pkey, String skey) {
+        DocumentValueItem item = dynDb.dynamoDbMapper.load(DocumentValueItem.class, pkey, skey, this.dynDb.ddbCfgDefault);
         return item;
     }
 
-    public void deleteBaseItem(String pkey, String skey) {
-        BaseItem item = dynDb.dynamoDbMapper.load(BaseItem.class, pkey, skey, this.dynDb.ddbCfgDefault);
+    public void deleteItem(String pkey, String skey) {
+        DocumentValueItem item = dynDb.dynamoDbMapper.load(DocumentValueItem.class, pkey, skey, this.dynDb.ddbCfgDefault);
         dynDb.dynamoDbMapper.delete(item);
     }
 
     /**
      * Gets all items of the given sort key
      */
-    public List<BaseItem> getBaseItemsBySortKeyEquals(String skey) {
+    public List<DocumentValueItem> getItemsBySortKeyEquals(String skey) {
 
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
         eav.put(":val1", new AttributeValue().withS(skey));
@@ -52,7 +51,7 @@ public class BaseItemDao {
         DynamoDBScanExpression ddbScanExpression = new DynamoDBScanExpression().withFilterExpression("skey = :val1")
                 .withExpressionAttributeValues(eav);
 
-        List<BaseItem> items = dynDb.dynamoDbMapper.scan(BaseItem.class, ddbScanExpression);
+        List<DocumentValueItem> items = dynDb.dynamoDbMapper.scan(DocumentValueItem.class, ddbScanExpression);
         return items;
     }
 }

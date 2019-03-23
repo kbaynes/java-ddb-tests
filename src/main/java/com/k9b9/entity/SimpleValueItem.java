@@ -9,17 +9,17 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
  * Item
  */
 @DynamoDBTable(tableName = "SingleTableTest")
-public class BaseItem {
+public class SimpleValueItem {
 
     public String pkey;
     public String skey;
     public String value;
 
-    public BaseItem() {
+    public SimpleValueItem() {
 
     }
 
-    public BaseItem(String pkey, String skey, String value) {
+    public SimpleValueItem(String pkey, String skey, String value) {
         this.pkey = pkey;
         this.skey = skey;
         this.value = value;

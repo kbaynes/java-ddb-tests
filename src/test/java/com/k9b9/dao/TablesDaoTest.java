@@ -1,7 +1,7 @@
 package com.k9b9.dao;
 
 import com.k9b9.dao.TablesDao;
-import com.k9b9.ddb.DynDb;
+import com.k9b9.ddb.SingleTableDdb;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -24,7 +24,7 @@ public class TablesDaoTest {
     @Before
     public void beforeTest() {
         // new DynDb(aws_accesskey, aws_secretkey, aws_region);
-        dao = new TablesDao(new DynDb());
+        dao = new TablesDao(new SingleTableDdb(tableName));
     }
 
     @Test

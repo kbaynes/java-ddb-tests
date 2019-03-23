@@ -7,16 +7,16 @@ import java.util.List;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.TableCollection;
 import com.amazonaws.services.dynamodbv2.model.ListTablesResult;
-import com.k9b9.ddb.DynDb;
+import com.k9b9.ddb.SingleTableDdb;
 
 /**
  * TablesDao
  */
 public class TablesDao {
 
-    private DynDb dynDb;
+    private SingleTableDdb dynDb;
 
-    public TablesDao(DynDb dynDb) {
+    public TablesDao(SingleTableDdb dynDb) {
         this.dynDb = dynDb;
     }
 

@@ -5,8 +5,8 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import com.k9b9.model.Admin;
-import com.k9b9.model.Admin.Level;
+import com.k9b9.dto.Admin;
+import com.k9b9.model.AdminLevel;
 
 /**
  * Admin entity
@@ -21,9 +21,9 @@ public class AdminItem {
     public String name;
     public String userId;
     public String hashedPass;
-    public Level level;
+    public AdminLevel level;
 
-    public AdminItem(String pkey, String name, String userId, String hashedPass, Level level) {
+    public AdminItem(String pkey, String name, String userId, String hashedPass, AdminLevel level) {
         this.pkey = pkey;
         this.name = name;
         this.userId = userId;
@@ -88,7 +88,7 @@ public class AdminItem {
      * @return the level as enum
      */
     @DynamoDBIgnore
-    public Level getLevelAsEnum() {
+    public AdminLevel getLevelAsEnum() {
         return level;
     }
 
@@ -96,7 +96,7 @@ public class AdminItem {
      * @param level the level to set
      */
     public void setLevel(int level) {
-        this.level = Admin.Level.valueOf(level);
+        this.level = AdminLevel.valueOf(level);
     }
 
     /**

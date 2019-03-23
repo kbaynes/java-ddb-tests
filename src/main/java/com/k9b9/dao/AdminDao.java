@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.k9b9.ddb.DynDb;
+import com.k9b9.ddb.SingleTableDdb;
 import com.k9b9.entity.AdminItem;
 
 /**
@@ -14,9 +14,9 @@ import com.k9b9.entity.AdminItem;
  */
 public class AdminDao {
 
-    private DynDb dynDb;
+    private SingleTableDdb dynDb;
 
-    public AdminDao(DynDb dynDb) {
+    public AdminDao(SingleTableDdb dynDb) {
         this.dynDb = dynDb;
     }
 
